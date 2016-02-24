@@ -48,7 +48,7 @@ class WsController extends Controller
     {
         SoapWrapper::add(function($service) {
             $service
-                ->name('currency')
+                ->name('customer')
                 ->wsdl('http://10.16.11.16:8077/WS/WebServiceSudamericana.asmx?WSDL')
                 ->trace(true)
                 ->cache(WSDL_CACHE_NONE)
@@ -56,13 +56,15 @@ class WsController extends Controller
         });
 
         $data = [
+            'wPwd'   => 't874j563bk580fghu',
             'wDocId' => '6929262',
         ];
 
-        // Using the added service
-        SoapWrapper::service('currency', function ($service) use ($data) {
-            var_dump($service->getFunctions());
-            var_dump($service->call('su_PersonaGetByDocId', [$data])->GetConversionAmountResult);
+        SoapWrapper::service('customer', function ($service) use ($data) {
+            // var_dump($service->getFunctions());
+            $response = $service->call('su_PersonaGetByDocId', [$data]);
+
+            dd(explode('|', $response->su_PersonaGetByDocIdResult));
         });
     }
 
